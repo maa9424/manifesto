@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>thank you for watching</title>
+
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: helvetica, arial, sans-serif;
+  overflow: hidden;
+}
+
+/* intro */
+#intro {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 1.8s ease;
+}
+
+#intro h1 {
+  font-weight: 300;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  text-transform: lowercase;
+}
+
+/* menu */
+#menu {
+  display: none;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.option {
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.6;
+  transition: 0.4s;
+  text-transform: lowercase;
+}
+
+.option:hover {
+  opacity: 1;
+}
+
+/* works */
+.work {
+  display: none;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  text-align: center;
+}
+
+.active {
+  display: flex !important;
+}
+
+/* work i */
+#work1 p {
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  max-width: 800px;
+  text-transform: lowercase;
+}
+
+/* delayed reveal */
+.reveal {
+  color: transparent;
+  text-shadow: 0 0 0 white;
+  cursor: default;
+  transition: color 0.6s ease, text-shadow 0.6s ease;
+}
+
+.reveal.visible {
+  color: white;
+  text-shadow: none;
+}
+
+/* work ii */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 800px;
+}
+
+.box {
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 35px 20px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  text-transform: lowercase;
+}
+
+/* work iii */
+#dynamic {
+  max-width: 800px;
+  font-size: 1.6rem;
+  line-height: 2.6rem;
+  text-transform: lowercase;
+}
+
+/* back */
+.back {
+  position: fixed;
+  bottom: 25px;
+  width: 100%;
+  text-align: center;
+  opacity: 0.5;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+</style>
+</head>
+
+<body>
+
+<!-- intro -->
+<div id="intro">
+  <h1>thank you for watching</h1>
+</div>
+
+<!-- menu -->
+<div id="menu">
+  <div class="option" onclick="openWork('work1')">i — fragment</div>
+  <div class="option" onclick="openWork('work2')">ii — structure</div>
+  <div class="option" onclick="openWork('work3')">iii — duration</div>
+</div>
+
+<!-- work i -->
+<div class="work" id="work1">
+  <p>
+    <span class="reveal">meaning begins before it becomes visible</span><br><br>
+
+    <span class="reveal">not as image but as pressure forming in advance of articulation</span><br><br>
+
+    <span class="reveal">what is seen is always partial</span><br>
+    <span class="reveal">what is not seen is always active</span><br><br>
+
+    <span class="reveal">i am interested in the moment just before recognition settles</span><br><br>
+
+    <span class="reveal">where perception is still unstable and nothing has taken final shape</span>
+  </p>
+</div>
+
+<!-- work ii -->
+<div class="work" id="work2">
+  <div class="grid">
+    <div class="box">silence is structure</div>
+    <div class="box">dialogue is concealment</div>
+    <div class="box">framing is interruption</div>
+    <div class="box">absence is active</div>
+    <div class="box">interiority drives form</div>
+    <div class="box">truth resists articulation</div>
+  </div>
+</div>
+
+<!-- work iii -->
+<div class="work" id="work3">
+  <div id="dynamic"></div>
+</div>
+
+<!-- back -->
+<div class="back" onclick="back()">← back</div>
+
+<script>
+
+/* intro */
+const intro = document.getElementById("intro");
+const menu = document.getElementById("menu");
+const works = document.querySelectorAll(".work");
+
+setTimeout(() => {
+  intro.style.opacity = "0";
+  setTimeout(() => {
+    intro.style.display = "none";
+    menu.style.display = "flex";
+  }, 1800);
+}, 1500);
+
+/* navigation */
+function openWork(id) {
+  menu.style.display = "none";
+  works.forEach(w => w.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  if (id === "work3") startDynamic();
+}
+
+function back() {
+  works.forEach(w => w.classList.remove("active"));
+  menu.style.display = "flex";
+}
+
+/* work i delayed reveal */
+const revealEls = document.querySelectorAll(".reveal");
+
+revealEls.forEach(el => {
+  let timer;
+
+  el.addEventListener("mouseenter", () => {
+    timer = setTimeout(() => {
+      el.classList.add("visible");
+    }, 1200);
+  });
+
+  el.addEventListener("mouseleave", () => {
+    clearTimeout(timer);
+    el.classList.remove("visible");
+  });
+});
+
+/* work iii */
+const states = [
+`meaning does not arrive fully formed<br>it accumulates in delay`,
+
+`what is not said reorganizes what is said`,
+
+`a frame interrupts reality rather than contains it`,
+
+`story exists in the gap between perception and articulation`,
+
+`i construct conditions where meaning cannot settle`
+];
+
+let i = 0;
+let el = document.getElementById("dynamic");
+let interval;
+
+function startDynamic() {
+  clearInterval(interval);
+
+  function cycle() {
+    el.innerHTML = states[i];
+    i = (i + 1) % states.length;
+  }
+
+  cycle();
+  interval = setInterval(cycle, 4000);
+}
+
+</script>
+
+</body>
+</html>
