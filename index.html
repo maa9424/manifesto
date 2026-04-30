@@ -70,7 +70,7 @@ body {
   display: flex !important;
 }
 
-/* work i */
+/* WORK I */
 #work1 p {
   font-size: 1.6rem;
   line-height: 2.6rem;
@@ -78,20 +78,27 @@ body {
   text-transform: lowercase;
 }
 
-/* delayed reveal */
+/* delayed + breathing reveal system */
 .reveal {
-  color: transparent;
-  text-shadow: 0 0 0 white;
-  cursor: default;
-  transition: color 0.6s ease, text-shadow 0.6s ease;
+  opacity: 0.25;
+  filter: blur(6px);
+  transition: opacity 0.6s ease, filter 0.6s ease;
+  animation: breathe 6s infinite ease-in-out;
 }
 
 .reveal.visible {
-  color: white;
-  text-shadow: none;
+  opacity: 1;
+  filter: blur(0px);
+  animation: none;
 }
 
-/* work ii */
+@keyframes breathe {
+  0% { opacity: 0.2; }
+  50% { opacity: 0.35; }
+  100% { opacity: 0.2; }
+}
+
+/* WORK II */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -107,7 +114,7 @@ body {
   text-transform: lowercase;
 }
 
-/* work iii */
+/* WORK III */
 #dynamic {
   max-width: 800px;
   font-size: 1.6rem;
@@ -180,7 +187,7 @@ body {
 
 <script>
 
-/* intro */
+/* intro flow */
 const intro = document.getElementById("intro");
 const menu = document.getElementById("menu");
 const works = document.querySelectorAll(".work");
@@ -207,16 +214,22 @@ function back() {
   menu.style.display = "flex";
 }
 
-/* work i delayed reveal */
+/* WORK I — stable delayed reveal */
 const revealEls = document.querySelectorAll(".reveal");
 
-revealEls.forEach(el => {
+revealEls.forEach((el, index) => {
   let timer;
 
   el.addEventListener("mouseenter", () => {
+
+    const willReveal = Math.random() > 0.15; // slight refusal effect
+
+    if (!willReveal) return;
+
     timer = setTimeout(() => {
       el.classList.add("visible");
-    }, 1200);
+    }, 900 + (index * 180));
+
   });
 
   el.addEventListener("mouseleave", () => {
@@ -225,7 +238,7 @@ revealEls.forEach(el => {
   });
 });
 
-/* work iii */
+/* WORK III — duration system */
 const states = [
 `meaning does not arrive fully formed<br>it accumulates in delay`,
 
